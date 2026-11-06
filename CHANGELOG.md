@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1
+
+- Mapping a Telegram user to a Home Assistant user offers the people of the bot's allowed chats
+  by name; any other Telegram user id can still be typed in. Removing mappings shows the names.
+
 ## 0.1.0
 
 - First release: messages of a Telegram bot (the built-in Telegram bot integration) answered by an
