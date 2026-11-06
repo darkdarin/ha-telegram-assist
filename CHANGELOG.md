@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.2
+
+- The assistant's Markdown is shown formatted in Telegram (bold, italic, code, links, quotes,
+  headings and lists) instead of raw; if Telegram rejects the formatting, the answer is sent as
+  plain text.
+
 ## 0.1.1
 
 - Mapping a Telegram user to a Home Assistant user offers the people of the bot's allowed chats
