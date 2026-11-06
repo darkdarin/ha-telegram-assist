@@ -10,6 +10,8 @@ The project's description, decisions and roadmap live in Notion (in Russian):
 [Telegram Assist](https://app.notion.com/p/410e74ee720f81b2a43aff42b25bf396), next to
 [FlowPilot](https://app.notion.com/p/40de74ee720f8085816fccb77ca103f7). Read it before working,
 keep its roadmap and status up to date, and record decisions there with their trade-offs.
+How the family ships (README style, branding, changelog, releases, CI):
+[Поставка в Home Assistant](https://app.notion.com/p/410e74ee720f81f184cfc6ecf07080ba).
 
 ## Language
 
