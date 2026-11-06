@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import shutil
+from unittest.mock import AsyncMock, patch
+
 from .conftest import BOT, HEARD, FakeStt, Setup
 
 
@@ -39,8 +42,16 @@ async def test_other_bots_are_left_alone(setup: Setup) -> None:
 
 
 async def test_a_voice_message_goes_through_speech_to_text(setup: Setup, fake_stt: FakeStt) -> None:
-    await setup.voice()
-    assert fake_stt.received == 2 * 16000  # one second, decoded by ffmpeg to 16 kHz mono
+    """With ffmpeg installed (locally) the decoding is real; without it (CI) it is stood in for."""
+    if shutil.which("ffmpeg"):
+        await setup.voice()
+    else:
+        with patch(
+            "custom_components.telegram_assist.bridge.decode_to_pcm",
+            AsyncMock(return_value=bytes(2 * 16000)),
+        ):
+            await setup.voice()
+    assert fake_stt.received == 2 * 16000  # one second of 16 kHz mono
     assert setup.telegram.texts == [f"🎤 {HEARD}\n\n{setup.user}|telegram-100|{HEARD}"]
     assert not setup.telegram.downloaded[0].exists()  # the downloaded file is removed
 

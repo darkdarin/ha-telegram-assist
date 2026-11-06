@@ -11,13 +11,6 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v10.3.3
-      - name: Install ffmpeg (voice messages are decoded with it)
-        timeout-minutes: 8
-        # the runner's apt mirror sometimes stalls: drop stalled connections and retry them
-        run: |
-          APT="-o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 -o Acquire::Retries=5"
-          sudo apt-get $APT update
-          sudo apt-get $APT install -y --no-install-recommends ffmpeg
       - run: uv sync --locked
       - run: uv run ruff check .
       - run: uv run ruff format --check .

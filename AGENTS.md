@@ -30,8 +30,9 @@ and planning live in Notion (FlowPilot pages), in Russian.
 - Python 3.14, `uv`. The test environment is pinned to one Home Assistant release through
   `pytest-homeassistant-custom-component` (0.13.375 == 2026.10.4, the same as FlowPilot).
 - Checks: `uv run ruff check .`, `uv run ruff format --check .`, `uv run mypy`,
-  `uv run pytest -q -p no:logging` (ffmpeg must be installed). CI runs the same plus hassfest and
-  HACS validation.
+  `uv run pytest -q -p no:logging`. With ffmpeg installed the voice test decodes for real; CI has no
+  ffmpeg (apt is slow and stalls there) and stands the decoding in. CI also runs hassfest and HACS
+  validation.
 
 ## Repository
 
