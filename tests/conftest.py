@@ -15,6 +15,7 @@ from homeassistant.components import conversation, stt
 from homeassistant.components.assist_pipeline.pipeline import PipelineData
 from homeassistant.components.conversation.models import AbstractConversationAgent
 from homeassistant.core import HomeAssistant, ServiceCall, ServiceResponse, SupportsResponse
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import intent
 from homeassistant.setup import async_setup_component
 from pytest_homeassistant_custom_component.common import MockConfigEntry
@@ -109,8 +110,11 @@ class Telegram:
     sent: list[dict[str, Any]] = field(default_factory=list)
     actions: list[str] = field(default_factory=list)
     downloaded: list[Path] = field(default_factory=list)
+    reject_html: bool = False
 
     async def send_message(self, call: ServiceCall) -> ServiceResponse:
+        if self.reject_html and call.data.get("parse_mode") == "html":
+            raise HomeAssistantError("Can't parse entities")
         self.sent.append(dict(call.data))
         return None
 

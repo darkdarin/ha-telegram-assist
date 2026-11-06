@@ -10,13 +10,15 @@ chosen Assist assistant and replies with ``telegram_bot`` actions:
 - each chat is one dialogue (``conversation_id``) until someone sends ``/new``;
 - a Telegram user mapped to a Home Assistant user asks as that user, so agents (and FlowPilot)
   know who is asking;
-- while the assistant thinks, the chat shows "typing…".
+- while the assistant thinks, the chat shows "typing…";
+- the agent's Markdown is sent as Telegram HTML, or as plain text if Telegram rejects it.
 """
 
 from __future__ import annotations
 
 import asyncio
 import contextlib
+import html
 import logging
 from collections.abc import AsyncIterator, Callable, Mapping
 from pathlib import Path
@@ -43,6 +45,7 @@ from .const import (
     TYPING_EVERY_S,
     VOICE_MIME_TYPES,
 )
+from .formatting import to_telegram_html
 from .texts import text as say
 
 _LOGGER = logging.getLogger(__name__)
@@ -183,8 +186,8 @@ class AssistBridge:
         if not heard:
             await self._send(chat, say("not_heard", self.hass.config.language), context)
             return
-        quote = f"🎤 {heard}\n\n" if self.options.get(CONF_SHOW_HEARD, True) else ""
-        await self._send(chat, quote + answer, context)
+        quote = f"🎤 {heard}" if self.options.get(CONF_SHOW_HEARD, True) else None
+        await self._send(chat, answer, context, quote=quote)
 
     async def _run_pipeline(self, pcm: bytes, chat: int, context: Context) -> tuple[str, str]:
         """Speech-to-text and agent of the assistant, like a satellite's command."""
@@ -239,15 +242,31 @@ class AssistBridge:
             raise RuntimeError(f"telegram_bot did not download {file_id}: {response}")
         return Path(str(path))
 
-    async def _send(self, chat: int, text: str, context: Context) -> None:
+    async def _send(
+        self, chat: int, text: str, context: Context, *, quote: str | None = None
+    ) -> None:
+        """Send Markdown ``text`` formatted; ``quote`` (the user's own words) goes first as is.
+
+        If Telegram rejects the formatting, the same message goes again as plain text.
+        """
+        head = f"{quote}\n\n" if quote else ""
+        try:
+            await self._send_as(
+                chat, html.escape(head, quote=False) + to_telegram_html(text), "html", context
+            )
+        except Exception as err:  # noqa: BLE001 - whatever the reason, plain text may still pass
+            _LOGGER.debug("Telegram rejected the formatted answer (%s), sending it plain", err)
+            await self._send_as(chat, head + text, "plain_text", context)
+
+    async def _send_as(self, chat: int, message: str, parse_mode: str, context: Context) -> None:
         await self.hass.services.async_call(
             TELEGRAM,
             "send_message",
             {
                 "config_entry_id": self.bot,
                 "chat_id": chat,
-                "message": text,
-                "parse_mode": "plain_text",
+                "message": message,
+                "parse_mode": parse_mode,
             },
             blocking=True,
             context=context,

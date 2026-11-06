@@ -56,6 +56,21 @@ async def test_a_voice_message_goes_through_speech_to_text(setup: Setup, fake_st
     assert not setup.telegram.downloaded[0].exists()  # the downloaded file is removed
 
 
+async def test_markdown_answers_are_formatted(setup: Setup) -> None:
+    await setup.message("**жирный** и `a<b`")
+    (sent,) = setup.telegram.sent
+    assert sent["parse_mode"] == "html"
+    assert sent["message"].endswith("|<b>жирный</b> и <code>a&lt;b</code>")
+
+
+async def test_rejected_formatting_falls_back_to_plain_text(setup: Setup) -> None:
+    setup.telegram.reject_html = True
+    await setup.message("**жирный**")
+    (sent,) = setup.telegram.sent
+    assert sent["parse_mode"] == "plain_text"
+    assert sent["message"].endswith("|**жирный**")
+
+
 async def test_a_failure_is_told_in_the_chat(setup: Setup) -> None:
     setup.agent.fail = True
     await setup.message("привет")
