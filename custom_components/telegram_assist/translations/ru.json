@@ -41,9 +41,9 @@
       },
       "add_user": {
         "title": "Кто есть кто",
-        "description": "Сообщения этого пользователя Telegram отправляются от имени этого пользователя Home Assistant — агенты (и FlowPilot) знают, кто спрашивает. Свой id в Telegram подскажет @userinfobot.",
+        "description": "Выберите человека из разрешённых чатов бота или введите id пользователя Telegram (свой подскажет @userinfobot). Его сообщения отправляются от имени этого пользователя Home Assistant — агенты (и FlowPilot) знают, кто спрашивает.",
         "data": {
-          "telegram_user": "Id пользователя Telegram",
+          "telegram_user": "Пользователь Telegram",
           "ha_user": "Пользователь Home Assistant"
         }
       },

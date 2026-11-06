@@ -26,6 +26,7 @@ from .const import (
 
 CONF_TELEGRAM_USER = "telegram_user"
 CONF_HA_USER = "ha_user"
+ALLOWED_CHATS = "allowed_chat_ids"  # telegram_bot's subentries: {chat_id}, titled with the name
 
 
 class TelegramAssistConfigFlow(ConfigFlow, domain=DOMAIN):
@@ -74,6 +75,19 @@ class TelegramAssistOptionsFlow(OptionsFlow):
             step_id="init", menu_options=["settings", "add_user", "remove_user"]
         )
 
+    def _people(self) -> dict[str, str]:
+        """Telegram users allowed to write to the bot, by id: its private allowed chats.
+
+        A private chat's id is its user's id; group chats (negative ids) are not people.
+        """
+        bot = self.hass.config_entries.async_get_entry(str(self.config_entry.data[CONF_BOT]))
+        people: dict[str, str] = {}
+        for sub in bot.subentries.values() if bot else []:
+            chat = sub.data.get("chat_id")
+            if sub.subentry_type == ALLOWED_CHATS and isinstance(chat, int) and chat > 0:
+                people[str(chat)] = sub.title or str(chat)
+        return people
+
     def _options(self) -> dict[str, Any]:
         options = dict(self.config_entry.options)
         options[CONF_USERS] = dict(options.get(CONF_USERS) or {})
@@ -117,9 +131,21 @@ class TelegramAssistOptionsFlow(OptionsFlow):
                 options = self._options()
                 options[CONF_USERS][telegram_user] = user_input[CONF_HA_USER]
                 return self.async_create_entry(data=options)
+        people = self._people()
+        mapped = self._options()[CONF_USERS]
         schema = probatio.Schema(
             {
-                probatio.Required(CONF_TELEGRAM_USER): selector.TextSelector(),
+                # the bot's allowed people first; any other id can be typed in
+                probatio.Required(CONF_TELEGRAM_USER): selector.SelectSelector(
+                    selector.SelectSelectorConfig(
+                        options=[
+                            selector.SelectOptionDict(value=tg, label=f"{name} ({tg})")
+                            for tg, name in people.items()
+                            if tg not in mapped
+                        ],
+                        custom_value=True,
+                    )
+                ),
                 probatio.Required(CONF_HA_USER): selector.SelectSelector(
                     selector.SelectSelectorConfig(
                         options=[
@@ -143,12 +169,15 @@ class TelegramAssistOptionsFlow(OptionsFlow):
                 options[CONF_USERS].pop(telegram_user, None)
             return self.async_create_entry(data=options)
         names = {u.id: u.name or u.id for u in await self.hass.auth.async_get_users()}
+        people = self._people()
         schema = probatio.Schema(
             {
                 probatio.Required(CONF_USERS): selector.SelectSelector(
                     selector.SelectSelectorConfig(
                         options=[
-                            selector.SelectOptionDict(value=tg, label=f"{tg} → {names.get(ha, ha)}")
+                            selector.SelectOptionDict(
+                                value=tg, label=f"{people.get(tg, tg)} → {names.get(ha, ha)}"
+                            )
                             for tg, ha in options[CONF_USERS].items()
                         ],
                         multiple=True,

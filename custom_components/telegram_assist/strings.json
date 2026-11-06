@@ -41,9 +41,9 @@
       },
       "add_user": {
         "title": "Who is who",
-        "description": "Messages of this Telegram user are asked as this Home Assistant user, so agents (and FlowPilot) know who is asking. Ask @userinfobot for a Telegram user id.",
+        "description": "Pick someone from the bot's allowed chats or type a Telegram user id (@userinfobot tells yours). Their messages are asked as this Home Assistant user, so agents (and FlowPilot) know who is asking.",
         "data": {
-          "telegram_user": "Telegram user id",
+          "telegram_user": "Telegram user",
           "ha_user": "Home Assistant user"
         }
       },
