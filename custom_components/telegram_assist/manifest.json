@@ -1,0 +1,14 @@
+{
+  "domain": "telegram_assist",
+  "name": "Telegram Assist",
+  "after_dependencies": ["telegram_bot"],
+  "codeowners": ["@darkdarin"],
+  "config_flow": true,
+  "dependencies": ["assist_pipeline", "conversation", "ffmpeg"],
+  "documentation": "https://github.com/darkdarin/ha-telegram-assist",
+  "integration_type": "service",
+  "iot_class": "cloud_push",
+  "issue_tracker": "https://github.com/darkdarin/ha-telegram-assist/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}

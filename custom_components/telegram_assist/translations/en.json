@@ -1,0 +1,64 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Answer a Telegram bot with Assist",
+        "description": "Messages to the bot (set up in the Telegram bot integration, with its allowed chats) are answered by an Assist assistant: text by its agent, voice messages by its speech-to-text and agent.",
+        "data": {
+          "bot_entry_id": "Telegram bot",
+          "pipeline": "Assistant"
+        },
+        "data_description": {
+          "pipeline": "Its conversation agent answers; voice messages use its speech-to-text. The preferred assistant when not set."
+        }
+      }
+    },
+    "abort": {
+      "no_bot": "Set up the Telegram bot integration first (Polling works without an external address).",
+      "already_configured": "This bot is already answered by Assist."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Telegram Assist",
+        "menu_options": {
+          "settings": "Settings",
+          "add_user": "Map a Telegram user to a Home Assistant user",
+          "remove_user": "Remove user mappings"
+        }
+      },
+      "settings": {
+        "title": "Settings",
+        "data": {
+          "pipeline": "Assistant",
+          "show_heard": "Quote what was heard in a voice message",
+          "only_known_users": "Answer only mapped users"
+        },
+        "data_description": {
+          "only_known_users": "Messages of Telegram users that are not mapped to a Home Assistant user are ignored."
+        }
+      },
+      "add_user": {
+        "title": "Who is who",
+        "description": "Messages of this Telegram user are asked as this Home Assistant user, so agents (and FlowPilot) know who is asking. Ask @userinfobot for a Telegram user id.",
+        "data": {
+          "telegram_user": "Telegram user id",
+          "ha_user": "Home Assistant user"
+        }
+      },
+      "remove_user": {
+        "title": "Remove mappings",
+        "data": {
+          "users": "Mappings"
+        }
+      }
+    },
+    "error": {
+      "not_a_number": "A Telegram user id is a number."
+    },
+    "abort": {
+      "no_users": "No Telegram users are mapped yet."
+    }
+  }
+}

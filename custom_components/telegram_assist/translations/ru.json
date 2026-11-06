@@ -1,0 +1,64 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Отвечать боту Telegram через Assist",
+        "description": "Сообщения боту (он настраивается в интеграции Telegram bot вместе с разрешёнными чатами) обрабатывает ассистент Assist: текст — его агент, голосовые — его распознавание речи и агент.",
+        "data": {
+          "bot_entry_id": "Бот Telegram",
+          "pipeline": "Ассистент"
+        },
+        "data_description": {
+          "pipeline": "Отвечает его агент диалога; голосовые распознаёт его распознавание речи. Если не выбран — предпочтительный ассистент."
+        }
+      }
+    },
+    "abort": {
+      "no_bot": "Сначала настройте интеграцию Telegram bot (режим Polling работает без внешнего адреса).",
+      "already_configured": "Этому боту уже отвечает Assist."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Telegram Assist",
+        "menu_options": {
+          "settings": "Настройки",
+          "add_user": "Сопоставить пользователя Telegram с пользователем Home Assistant",
+          "remove_user": "Удалить сопоставления"
+        }
+      },
+      "settings": {
+        "title": "Настройки",
+        "data": {
+          "pipeline": "Ассистент",
+          "show_heard": "Цитировать распознанное в голосовом сообщении",
+          "only_known_users": "Отвечать только сопоставленным пользователям"
+        },
+        "data_description": {
+          "only_known_users": "Сообщения пользователей Telegram, не сопоставленных с пользователем Home Assistant, игнорируются."
+        }
+      },
+      "add_user": {
+        "title": "Кто есть кто",
+        "description": "Сообщения этого пользователя Telegram отправляются от имени этого пользователя Home Assistant — агенты (и FlowPilot) знают, кто спрашивает. Свой id в Telegram подскажет @userinfobot.",
+        "data": {
+          "telegram_user": "Id пользователя Telegram",
+          "ha_user": "Пользователь Home Assistant"
+        }
+      },
+      "remove_user": {
+        "title": "Удалить сопоставления",
+        "data": {
+          "users": "Сопоставления"
+        }
+      }
+    },
+    "error": {
+      "not_a_number": "Id пользователя Telegram — это число."
+    },
+    "abort": {
+      "no_users": "Пока нет сопоставленных пользователей."
+    }
+  }
+}
