@@ -4,6 +4,13 @@
 built-in `telegram_bot` integration) are answered by an Assist assistant. It belongs to the
 FlowPilot family (`~/Projects/ha-flow-pilot`) but works with any Assist agent.
 
+## Documentation
+
+The project's description, decisions and roadmap live in Notion (in Russian):
+[Telegram Assist](https://app.notion.com/p/410e74ee720f81b2a43aff42b25bf396), next to
+[FlowPilot](https://app.notion.com/p/40de74ee720f8085816fccb77ca103f7). Read it before working,
+keep its roadmap and status up to date, and record decisions there with their trade-offs.
+
 ## Language
 
 Everything in this repository is in **English**: code, comments, docs, commit messages. Research
@@ -28,11 +35,16 @@ and planning live in Notion (FlowPilot pages), in Russian.
 
 ## Repository
 
-- GitHub: `darkdarin/ha-telegram-assist` (to be created by the owner's decision), default branch
-  `main`. Use the personal account per command: `GH_TOKEN="$(gh auth token --user darkdarin)" gh ...`;
+- GitHub: `darkdarin/ha-telegram-assist` (public: HACS needs it), default branch `main`, push over
+  SSH. Use the personal account per command: `GH_TOKEN="$(gh auth token --user darkdarin)" gh ...`;
   never run `gh auth switch`, never print tokens.
 - Conventional Commits; the git author is configured locally.
 - License: Apache-2.0.
+- Releases: bump `version` in `custom_components/telegram_assist/manifest.json`, add a
+  `## <version>` section to `CHANGELOG.md`, push the tag `v<version>`; `release.yml` checks both and
+  creates the GitHub release that HACS offers as the update. A release is public: do it when the
+  owner asks.
+- Brand images: `uv run --no-project --with pillow python scripts/brand.py`.
 
 ## Rules
 

@@ -22,8 +22,9 @@ Works with any Assist conversation agent: the built-in one, an LLM integration o
 1. Set up the **Telegram bot** integration: **Settings → Devices & services → Add integration →
    Telegram bot**, platform **Polling**, your bot's token. Send `/start` to the bot and add your
    chat under **⋮ → Add allowed chat ID**.
-2. Add this repository to HACS (**HACS → ⋮ → Custom repositories**,
-   `https://github.com/darkdarin/ha-telegram-assist`, type **Integration**), install
+2. Add this repository to HACS: on Home Assistant 2026.11 and newer **Settings → Marketplace → Add
+   from link**, `darkdarin/ha-telegram-assist`; on 2026.10 **HACS → ⋮ → Custom repositories**,
+   `https://github.com/darkdarin/ha-telegram-assist`, type **Integration**. Install
    **Telegram Assist** and restart Home Assistant.
 3. **Add integration → Telegram Assist**: pick the bot and the assistant that answers it.
 4. In its options, map Telegram users to Home Assistant users (ask @userinfobot for your
