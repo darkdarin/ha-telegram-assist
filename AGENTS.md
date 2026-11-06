@@ -45,7 +45,9 @@ and planning live in Notion (FlowPilot pages), in Russian.
   `## <version>` section to `CHANGELOG.md`, push the tag `v<version>`; `release.yml` checks both and
   creates the GitHub release that HACS offers as the update. A release is public: do it when the
   owner asks.
-- Brand images: `uv run --no-project --with pillow python scripts/brand.py`.
+- Brand images: `uv run --no-project --with pillow python scripts/brand.py --font Onest.ttf` (Onest
+  variable TTF from google/fonts, not committed); upload `assets/social-preview.png` to the repository
+  settings by hand.
 
 ## Rules
 
